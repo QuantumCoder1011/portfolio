@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { ExternalLink, Flame, Trophy, Target, TrendingUp, Code2, Zap } from 'lucide-react'
+import { ExternalLink, Flame, Trophy, TrendingUp, Code2, Zap } from 'lucide-react'
 import { dsaStats } from '../../utils/data'
 
-/* ── Animated counter ────────────────────────────────────── */
 function AnimatedCounter({ target, duration = 1.8, suffix = '' }) {
   const [count, setCount] = useState(0)
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.5 })
@@ -27,14 +26,9 @@ function AnimatedCounter({ target, duration = 1.8, suffix = '' }) {
     return () => clearInterval(timer)
   }, [inView, target, duration])
 
-  return (
-    <span ref={ref}>
-      {count.toLocaleString()}{suffix}
-    </span>
-  )
+  return <span ref={ref}>{count.toLocaleString()}{suffix}</span>
 }
 
-/* ── Donut chart (SVG) ───────────────────────────────────── */
 function DonutChart({ easy, medium, hard, total }) {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.4 })
   const r = 52
@@ -45,7 +39,7 @@ function DonutChart({ easy, medium, hard, total }) {
 
   const segments = [
     { value: easyPct, color: '#10b981', label: 'Easy', count: easy, offset: 0 },
-    { value: medPct,  color: '#f59e0b', label: 'Medium', count: medium, offset: easyPct },
+    { value: medPct, color: '#f59e0b', label: 'Medium', count: medium, offset: easyPct },
     { value: hardPct, color: '#ef4444', label: 'Hard', count: hard, offset: easyPct + medPct },
   ]
   const gap = 0.01
@@ -55,19 +49,18 @@ function DonutChart({ easy, medium, hard, total }) {
 
   return (
     <div ref={ref} className="flex items-center gap-6 flex-wrap justify-center">
-      {/* SVG ring */}
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ transform: 'rotate(-90deg)' }}>
-          {/* Track */}
           <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="10" />
-          {/* Segments */}
           {segments.map((seg, i) => {
             const dashLen = (seg.value - gap) * circumference
             const dashOffset = -(seg.offset * circumference)
             return (
               <motion.circle
                 key={i}
-                cx={cx} cy={cy} r={r}
+                cx={cx}
+                cy={cy}
+                r={r}
                 fill="none"
                 stroke={seg.color}
                 strokeWidth="10"
@@ -81,7 +74,6 @@ function DonutChart({ easy, medium, hard, total }) {
             )
           })}
         </svg>
-        {/* Center label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="font-display font-bold text-xl" style={{ color: 'var(--text-primary)' }}>
             <AnimatedCounter target={total} duration={1.4} />
@@ -90,9 +82,8 @@ function DonutChart({ easy, medium, hard, total }) {
         </div>
       </div>
 
-      {/* Legend */}
       <div className="space-y-2.5">
-        {segments.map(seg => (
+        {segments.map((seg) => (
           <div key={seg.label} className="flex items-center gap-3">
             <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: seg.color }} />
             <span className="text-xs font-mono w-12" style={{ color: 'var(--text-muted)' }}>{seg.label}</span>
@@ -112,7 +103,6 @@ function DonutChart({ easy, medium, hard, total }) {
   )
 }
 
-/* ── Streak display ──────────────────────────────────────── */
 function StreakBar({ streak }) {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.4 })
   const days = Array.from({ length: 35 }, (_, i) => ({
@@ -143,14 +133,13 @@ function StreakBar({ streak }) {
           Past 35 days
         </span>
         <span className="text-xs font-mono" style={{ color: 'var(--section-num)' }}>
-          {streak} day streak 🔥
+          {streak} day streak
         </span>
       </div>
     </div>
   )
 }
 
-/* ── Focus area tag ──────────────────────────────────────── */
 function TopicTag({ label, index }) {
   return (
     <motion.span
@@ -171,11 +160,9 @@ function TopicTag({ label, index }) {
   )
 }
 
-/* ── Main section ────────────────────────────────────────── */
 export default function DSASection() {
   return (
     <section id="dsa" className="relative py-28 overflow-hidden">
-      {/* Bg */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full pointer-events-none"
         style={{ background: 'rgba(79,142,247,0.05)', filter: 'blur(100px)' }}
@@ -186,17 +173,13 @@ export default function DSASection() {
       />
 
       <div className="section-container">
-        {/* Header */}
         <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="section-label">
-            {/* dynamic number based on section order */}
-            04 — Coding
-          </span>
+          <span className="section-label">04 - Coding</span>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5">
             <h2
               className="font-display font-bold leading-tight"
@@ -223,9 +206,7 @@ export default function DSASection() {
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Left column — donut + streak */}
           <div className="lg:col-span-1 space-y-5">
-            {/* Donut chart card */}
             <motion.div
               className="rounded-2xl p-6"
               style={{
@@ -241,15 +222,9 @@ export default function DSASection() {
               <p className="font-mono text-xs uppercase tracking-widest mb-5" style={{ color: 'var(--text-muted)' }}>
                 Problems solved
               </p>
-              <DonutChart
-                easy={dsaStats.easy}
-                medium={dsaStats.medium}
-                hard={dsaStats.hard}
-                total={dsaStats.totalSolved}
-              />
+              <DonutChart easy={dsaStats.easy} medium={dsaStats.medium} hard={dsaStats.hard} total={dsaStats.totalSolved} />
             </motion.div>
 
-            {/* Streak card */}
             <motion.div
               className="rounded-2xl p-6"
               style={{
@@ -282,12 +257,10 @@ export default function DSASection() {
             </motion.div>
           </div>
 
-          {/* Right column — stats + topics */}
           <div className="lg:col-span-2 space-y-5">
-            {/* Stat cards row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
-                { icon: Trophy, label: 'Global Rank', value: dsaStats.ranking, color: '#f59e0b', suffix: '' },
+                { icon: Trophy, label: 'Global Rank', value: dsaStats.ranking, color: '#f59e0b', isCount: false },
                 { icon: TrendingUp, label: 'Contest Rating', value: dsaStats.contestRating, color: '#4f8ef7', isCount: true },
                 { icon: Zap, label: 'Contests', value: dsaStats.contests, color: '#8b5cf6', isCount: true },
                 { icon: Flame, label: 'Day Streak', value: dsaStats.streak, color: '#f97316', isCount: true },
@@ -307,21 +280,14 @@ export default function DSASection() {
                   whileHover={{ borderColor: `${stat.color}40`, y: -3, transition: { duration: 0.2 } }}
                 >
                   <stat.icon size={16} className="mb-3" style={{ color: stat.color }} />
-                  <div
-                    className="font-display font-bold text-xl mb-1"
-                    style={{ color: stat.color }}
-                  >
-                    {stat.isCount
-                      ? <AnimatedCounter target={stat.value} duration={1.5} />
-                      : stat.value
-                    }
+                  <div className="font-display font-bold text-xl mb-1" style={{ color: stat.color }}>
+                    {stat.isCount ? <AnimatedCounter target={stat.value} duration={1.5} /> : stat.value}
                   </div>
                   <div className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>{stat.label}</div>
                 </motion.div>
               ))}
             </div>
 
-            {/* Focus topics */}
             <motion.div
               className="rounded-2xl p-6"
               style={{
@@ -344,7 +310,6 @@ export default function DSASection() {
               </div>
             </motion.div>
 
-            {/* Breakdown bar chart */}
             <motion.div
               className="rounded-2xl p-6"
               style={{

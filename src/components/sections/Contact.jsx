@@ -1,9 +1,18 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Github, Linkedin, Code2, CheckCircle, AlertCircle, Mail, ArrowUpRight } from 'lucide-react'
-import { personalInfo } from '../../utils/data'
+import { dsaStats, personalInfo } from '../../utils/data'
 
-/* ── Fully fixed input with proper text visibility ───────── */
+function getDisplayName(url, fallback) {
+  try {
+    const parsed = new URL(url)
+    const parts = parsed.pathname.split('/').filter(Boolean)
+    return parts[parts.length - 1] || fallback
+  } catch {
+    return fallback
+  }
+}
+
 function InputField({ label, name, type = 'text', value, onChange, onBlur, error, placeholder, rows }) {
   const [focused, setFocused] = useState(false)
   const isTextarea = type === 'textarea'
@@ -25,7 +34,10 @@ function InputField({ label, name, type = 'text', value, onChange, onBlur, error
           type={isTextarea ? undefined : type}
           value={value}
           onChange={onChange}
-          onBlur={(e) => { setFocused(false); onBlur?.(e) }}
+          onBlur={(e) => {
+            setFocused(false)
+            onBlur?.(e)
+          }}
           onFocus={() => setFocused(true)}
           placeholder={placeholder}
           rows={rows}
@@ -78,8 +90,12 @@ function SocialLink({ href, icon: Icon, label, username, accentColor }) {
         <Icon size={16} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-mono text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{label}</p>
-        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-secondary)' }}>{username}</p>
+        <p className="font-mono text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+          {label}
+        </p>
+        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-secondary)' }}>
+          {username}
+        </p>
       </div>
       <ArrowUpRight size={14} style={{ color: 'var(--text-muted)' }} />
     </motion.a>
@@ -108,18 +124,18 @@ export default function Contact() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFields(f => ({ ...f, [name]: value }))
+    setFields((f) => ({ ...f, [name]: value }))
     if (touched[name]) {
       const errs = validate({ ...fields, [name]: value })
-      setErrors(prev => ({ ...prev, [name]: errs[name] }))
+      setErrors((prev) => ({ ...prev, [name]: errs[name] }))
     }
   }
 
   const handleBlur = (e) => {
     const { name } = e.target
-    setTouched(t => ({ ...t, [name]: true }))
+    setTouched((t) => ({ ...t, [name]: true }))
     const errs = validate(fields)
-    setErrors(prev => ({ ...prev, [name]: errs[name] }))
+    setErrors((prev) => ({ ...prev, [name]: errs[name] }))
   }
 
   const handleSubmit = async (e) => {
@@ -128,11 +144,18 @@ export default function Contact() {
     const errs = validate(fields)
     setErrors(errs)
     if (Object.keys(errs).length > 0) return
+
     setStatus('sending')
-    await new Promise(r => setTimeout(r, 1600))
+    const subject = encodeURIComponent(`Portfolio inquiry from ${fields.name}`)
+    const body = encodeURIComponent(`Name: ${fields.name}\nEmail: ${fields.email}\n\nMessage:\n${fields.message}`)
+
+    window.location.href = `mailto:${personalInfo.email}?subject=${subject}&body=${body}`
+
+    await new Promise((r) => setTimeout(r, 500))
     setStatus('success')
     setFields({ name: '', email: '', message: '' })
     setTouched({})
+    setErrors({})
   }
 
   return (
@@ -144,16 +167,13 @@ export default function Contact() {
       />
 
       <div className="section-container">
-        {/* Header */}
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="section-label">
-            05 — Contact
-          </span>
+          <span className="section-label">05 - Contact</span>
           <h2
             className="font-display font-bold leading-tight mb-4"
             style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', color: 'var(--text-primary)' }}
@@ -161,12 +181,11 @@ export default function Contact() {
             Let's <span className="gradient-text">Connect</span>
           </h2>
           <p className="text-sm leading-relaxed max-w-md mx-auto" style={{ color: 'var(--text-muted)' }}>
-            Looking for internships, collaborations, or just want to chat about tech? I'd love to hear from you.
+            Looking for internships, collaborations, or freelance work? I'd love to hear from you.
           </p>
         </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-8">
-          {/* Contact form */}
           <motion.div
             className="lg:col-span-3"
             initial={{ opacity: 0, x: -24 }}
@@ -206,10 +225,10 @@ export default function Contact() {
                       <CheckCircle size={26} className="text-emerald-400" />
                     </motion.div>
                     <h3 className="font-display font-bold text-xl mb-2" style={{ color: 'var(--text-primary)' }}>
-                      Message Sent!
+                      Email Draft Ready
                     </h3>
                     <p className="text-sm mb-7" style={{ color: 'var(--text-muted)' }}>
-                      Thanks for reaching out — I'll get back to you within 24 hours.
+                      Your mail app should open with a prefilled message to Vansh.
                     </p>
                     <button
                       onClick={() => setStatus('idle')}
@@ -224,13 +243,7 @@ export default function Contact() {
                     </button>
                   </motion.div>
                 ) : (
-                  <motion.form
-                    key="form"
-                    onSubmit={handleSubmit}
-                    className="space-y-5 relative z-10"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                  >
+                  <motion.form key="form" onSubmit={handleSubmit} className="space-y-5 relative z-10" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                     <h3 className="font-display font-semibold text-lg mb-5" style={{ color: 'var(--text-secondary)' }}>
                       Send a message
                     </h3>
@@ -265,7 +278,7 @@ export default function Contact() {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       error={errors.message}
-                      placeholder="Hi Alex! I wanted to reach out about..."
+                      placeholder="Hi Vansh, I wanted to reach out about..."
                       rows={5}
                     />
 
@@ -288,7 +301,7 @@ export default function Contact() {
                               animate={{ rotate: 360 }}
                               transition={{ duration: 0.7, repeat: Infinity, ease: 'linear' }}
                             />
-                            Sending...
+                            Preparing email...
                           </>
                         ) : (
                           <>
@@ -305,7 +318,6 @@ export default function Contact() {
             </div>
           </motion.div>
 
-          {/* Sidebar */}
           <motion.div
             className="lg:col-span-2 space-y-4"
             initial={{ opacity: 0, x: 24 }}
@@ -313,7 +325,6 @@ export default function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.65 }}
           >
-            {/* Direct email */}
             <a
               href={`mailto:${personalInfo.email}`}
               className="flex items-center gap-3.5 p-4 rounded-xl transition-all duration-200 group"
@@ -322,10 +333,7 @@ export default function Contact() {
                 border: '1px solid rgba(79,142,247,0.2)',
               }}
             >
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                style={{ background: 'rgba(79,142,247,0.18)', color: 'var(--section-num)' }}
-              >
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: 'rgba(79,142,247,0.18)', color: 'var(--section-num)' }}>
                 <Mail size={17} />
               </div>
               <div>
@@ -338,29 +346,27 @@ export default function Contact() {
               </div>
             </a>
 
-            {/* Social links — no Twitter, added LeetCode */}
             <SocialLink
               href={personalInfo.social.github}
               icon={Github}
               label="GitHub"
-              username="@alexchen"
+              username={`@${getDisplayName(personalInfo.social.github, 'QuantumCoder1011')}`}
             />
             <SocialLink
               href={personalInfo.social.linkedin}
               icon={Linkedin}
               label="LinkedIn"
-              username="Alex Chen"
+              username="Vansh Shah"
               accentColor="#0A66C2"
             />
             <SocialLink
               href={personalInfo.social.leetcode}
               icon={Code2}
               label="LeetCode"
-              username="alexchen · 320 solved"
+              username={`${dsaStats.username} · ${dsaStats.totalSolved} solved`}
               accentColor="#FFA116"
             />
 
-            {/* Availability */}
             <div
               className="rounded-xl p-4"
               style={{
@@ -373,8 +379,10 @@ export default function Contact() {
                 <span className="font-mono text-xs text-emerald-400 uppercase tracking-wider">Available</span>
               </div>
               <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                Looking for <span className="font-medium text-emerald-400">internships</span> and{' '}
-                <span className="font-medium text-emerald-400">entry-level roles</span>. Fast response guaranteed.
+                Looking for <span className="font-medium text-emerald-400">internships</span>,{' '}
+                <span className="font-medium text-emerald-400">remote work</span>,{' '}
+                <span className="font-medium text-emerald-400">part-time roles</span>, and{' '}
+                <span className="font-medium text-emerald-400">freelance projects</span>.
               </p>
             </div>
           </motion.div>

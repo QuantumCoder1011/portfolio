@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { personalInfo } from '../../utils/data'
 
 export default function LoadingScreen({ onComplete }) {
   const [progress, setProgress] = useState(0)
@@ -7,7 +8,7 @@ export default function LoadingScreen({ onComplete }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(p => {
+      setProgress((p) => {
         if (p >= 100) {
           clearInterval(interval)
           setTimeout(() => setDone(true), 250)
@@ -27,10 +28,8 @@ export default function LoadingScreen({ onComplete }) {
       transition={{ duration: 0.45, ease: 'easeInOut' }}
       onAnimationComplete={() => done && onComplete?.()}
     >
-      {/* Grid bg */}
       <div className="absolute inset-0 grid-bg" style={{ opacity: 0.35 }} />
 
-      {/* Glow */}
       <motion.div
         className="absolute w-80 h-80 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%)' }}
@@ -38,7 +37,6 @@ export default function LoadingScreen({ onComplete }) {
         transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      {/* Logo */}
       <motion.div
         className="relative z-10 mb-10"
         initial={{ opacity: 0, scale: 0.5 }}
@@ -53,15 +51,12 @@ export default function LoadingScreen({ onComplete }) {
             backdropFilter: 'blur(16px)',
           }}
         >
-          <span
-            className="font-display font-bold text-2xl gradient-text"
-          >
-            A
+          <span className="font-display font-bold text-2xl gradient-text">
+            {personalInfo.name.charAt(0)}
           </span>
         </div>
       </motion.div>
 
-      {/* Name */}
       <motion.div
         className="relative z-10 mb-8 overflow-hidden"
         initial={{ opacity: 0 }}
@@ -75,21 +70,17 @@ export default function LoadingScreen({ onComplete }) {
           animate={{ y: 0 }}
           transition={{ delay: 0.45, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
-          Alex Chen
+          {personalInfo.name}
         </motion.p>
       </motion.div>
 
-      {/* Progress */}
       <motion.div
         className="relative z-10 w-56"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.55 }}
       >
-        <div
-          className="h-px rounded-full overflow-hidden"
-          style={{ background: 'var(--border-subtle)' }}
-        >
+        <div className="h-px rounded-full overflow-hidden" style={{ background: 'var(--border-subtle)' }}>
           <motion.div
             className="h-full rounded-full"
             style={{
@@ -108,7 +99,6 @@ export default function LoadingScreen({ onComplete }) {
         </div>
       </motion.div>
 
-      {/* Floating dots */}
       {[...Array(5)].map((_, i) => (
         <motion.div
           key={i}

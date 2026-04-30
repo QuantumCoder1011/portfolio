@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 export default function ProjectDetail() {
   const { slug } = useParams()
   const navigate = useNavigate()
-  const project = projects.find(p => p.slug === slug)
+  const project = projects.find((p) => p.slug === slug)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -36,14 +36,14 @@ export default function ProjectDetail() {
 
   const container = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.1 } }
+    visible: { transition: { staggerChildren: 0.1 } },
   }
   const fadeUp = {
     hidden: { opacity: 0, y: 24 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
   }
 
-  const otherProjects = projects.filter(p => p.slug !== slug).slice(0, 3)
+  const otherProjects = projects.filter((p) => p.slug !== slug).slice(0, 3)
 
   return (
     <motion.div
@@ -53,7 +53,6 @@ export default function ProjectDetail() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Background */}
       <div className="fixed inset-0 grid-bg pointer-events-none" style={{ opacity: 0.3 }} />
       <div
         className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full pointer-events-none"
@@ -64,7 +63,6 @@ export default function ProjectDetail() {
       />
 
       <div className="section-container max-w-3xl">
-        {/* Back button */}
         <motion.button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 mb-10 text-sm font-medium transition-all group"
@@ -79,9 +77,7 @@ export default function ProjectDetail() {
         </motion.button>
 
         <motion.div variants={container} initial="hidden" animate="visible">
-          {/* Hero header */}
           <motion.div variants={fadeUp} className="mb-10">
-            {/* Visual banner */}
             <div
               className="relative rounded-2xl h-52 mb-8 overflow-hidden flex items-center justify-center"
               style={{
@@ -119,41 +115,43 @@ export default function ProjectDetail() {
               </div>
             </div>
 
-            {/* Link buttons */}
             <div className="flex flex-wrap gap-3 mt-6">
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all hover:scale-105"
-                style={{
-                  background: 'var(--glass-bg)',
-                  border: '1px solid var(--border-subtle)',
-                  color: 'var(--text-secondary)',
-                  backdropFilter: 'blur(12px)',
-                }}
-              >
-                <Github size={15} />
-                View Source Code
-              </a>
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all hover:scale-105"
-                style={{
-                  background: `${project.accent}18`,
-                  border: `1px solid ${project.accent}35`,
-                  color: project.accent,
-                }}
-              >
-                <ExternalLink size={14} />
-                Live Demo
-              </a>
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all hover:scale-105"
+                  style={{
+                    background: 'var(--glass-bg)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-secondary)',
+                    backdropFilter: 'blur(12px)',
+                  }}
+                >
+                  <Github size={15} />
+                  View Source Code
+                </a>
+              )}
+              {project.live && (
+                <a
+                  href={project.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all hover:scale-105"
+                  style={{
+                    background: `${project.accent}18`,
+                    border: `1px solid ${project.accent}35`,
+                    color: project.accent,
+                  }}
+                >
+                  <ExternalLink size={14} />
+                  Live Demo
+                </a>
+              )}
             </div>
           </motion.div>
 
-          {/* Tech stack */}
           <motion.div variants={fadeUp} className="mb-8">
             <div
               className="rounded-2xl p-6"
@@ -170,7 +168,7 @@ export default function ProjectDetail() {
                 </h2>
               </div>
               <div className="flex flex-wrap gap-2">
-                {project.tags.map(tag => (
+                {project.tags.map((tag) => (
                   <span
                     key={tag}
                     className="px-3 py-1.5 text-xs font-mono rounded-lg transition-all"
@@ -187,7 +185,6 @@ export default function ProjectDetail() {
             </div>
           </motion.div>
 
-          {/* Problem */}
           <motion.div variants={fadeUp} className="mb-6">
             <div
               className="rounded-2xl p-6"
@@ -209,7 +206,6 @@ export default function ProjectDetail() {
             </div>
           </motion.div>
 
-          {/* Solution */}
           <motion.div variants={fadeUp} className="mb-6">
             <div
               className="rounded-2xl p-6"
@@ -231,7 +227,6 @@ export default function ProjectDetail() {
             </div>
           </motion.div>
 
-          {/* Full description */}
           <motion.div variants={fadeUp} className="mb-6">
             <div
               className="rounded-2xl p-6"
@@ -255,7 +250,6 @@ export default function ProjectDetail() {
             </div>
           </motion.div>
 
-          {/* Learnings */}
           {project.learnings && (
             <motion.div variants={fadeUp} className="mb-12">
               <div
@@ -267,7 +261,7 @@ export default function ProjectDetail() {
                 }}
               >
                 <h2 className="font-display font-semibold text-base mb-3" style={{ color: project.accent }}>
-                  💡 Key Learnings
+                  Key Learnings
                 </h2>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
                   {project.learnings}
@@ -276,12 +270,8 @@ export default function ProjectDetail() {
             </motion.div>
           )}
 
-          {/* Other projects */}
           <motion.div variants={fadeUp}>
-            <div
-              className="h-px mb-10"
-              style={{ background: 'linear-gradient(90deg, transparent, var(--border-accent), transparent)' }}
-            />
+            <div className="h-px mb-10" style={{ background: 'linear-gradient(90deg, transparent, var(--border-accent), transparent)' }} />
             <h2 className="font-display font-bold text-xl mb-6" style={{ color: 'var(--text-primary)' }}>
               Other Projects
             </h2>
@@ -298,13 +288,10 @@ export default function ProjectDetail() {
                   whileHover={{
                     borderColor: `${p.accent}45`,
                     y: -3,
-                    transition: { duration: 0.2 }
+                    transition: { duration: 0.2 },
                   }}
                 >
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm mb-3"
-                    style={{ background: `${p.accent}18`, color: p.accent }}
-                  >
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm mb-3" style={{ background: `${p.accent}18`, color: p.accent }}>
                     {p.title[0]}
                   </div>
                   <p className="font-display font-semibold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>

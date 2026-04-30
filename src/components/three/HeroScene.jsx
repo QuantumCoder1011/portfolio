@@ -1,9 +1,8 @@
-import { useRef, useMemo, useEffect, useState } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Stars, Float, Torus, Box, Octahedron } from '@react-three/drei'
+import { Stars, Torus, Box, Octahedron } from '@react-three/drei'
 import * as THREE from 'three'
 
-/* ── Mouse tracker passed as shared ref ──────────────────── */
 function MouseTracker({ mouseRef }) {
   const { size } = useThree()
   useEffect(() => {
@@ -17,7 +16,6 @@ function MouseTracker({ mouseRef }) {
   return null
 }
 
-/* ── Holographic core sphere ─────────────────────────────── */
 function HoloCore({ mouseRef }) {
   const outerRef = useRef()
   const wireRef = useRef()
@@ -48,7 +46,6 @@ function HoloCore({ mouseRef }) {
 
   return (
     <group ref={groupRef}>
-      {/* Outer chrome shell */}
       <mesh ref={outerRef}>
         <sphereGeometry args={[1.6, 64, 64]} />
         <meshStandardMaterial
@@ -61,41 +58,31 @@ function HoloCore({ mouseRef }) {
         />
       </mesh>
 
-      {/* Inner wireframe */}
       <mesh ref={wireRef}>
         <sphereGeometry args={[1.65, 20, 20]} />
-        <meshBasicMaterial
-          color="#4f8ef7"
-          wireframe
-          transparent
-          opacity={0.12}
-        />
+        <meshBasicMaterial color="#4f8ef7" wireframe transparent opacity={0.12} />
       </mesh>
 
-      {/* Glow halo */}
       <mesh ref={glowRef}>
         <sphereGeometry args={[2.1, 32, 32]} />
-        <meshBasicMaterial
-          color="#00d4ff"
-          transparent
-          opacity={0.08}
-          side={THREE.BackSide}
-        />
+        <meshBasicMaterial color="#00d4ff" transparent opacity={0.08} side={THREE.BackSide} />
       </mesh>
     </group>
   )
 }
 
-/* ── Orbiting tech elements ──────────────────────────────── */
 function OrbitingElements({ mouseRef }) {
   const groupRef = useRef()
-  const items = useMemo(() => [
-    { radius: 2.8, speed: 0.35, yOffset: 0.3, scale: 0.18, color: '#4f8ef7', shape: 'box', tilt: 0.4 },
-    { radius: 3.4, speed: -0.22, yOffset: -0.4, scale: 0.14, color: '#00d4ff', shape: 'oct', tilt: -0.3 },
-    { radius: 3.0, speed: 0.18, yOffset: 0.6, scale: 0.12, color: '#8b5cf6', shape: 'box', tilt: 0.6 },
-    { radius: 2.6, speed: -0.40, yOffset: -0.2, scale: 0.16, color: '#38bdf8', shape: 'oct', tilt: -0.5 },
-    { radius: 3.6, speed: 0.28, yOffset: 0.1, scale: 0.10, color: '#a78bfa', shape: 'box', tilt: 0.2 },
-  ], [])
+  const items = useMemo(
+    () => [
+      { radius: 2.8, speed: 0.35, yOffset: 0.3, scale: 0.18, color: '#4f8ef7', shape: 'box', tilt: 0.4 },
+      { radius: 3.4, speed: -0.22, yOffset: -0.4, scale: 0.14, color: '#00d4ff', shape: 'oct', tilt: -0.3 },
+      { radius: 3.0, speed: 0.18, yOffset: 0.6, scale: 0.12, color: '#8b5cf6', shape: 'box', tilt: 0.6 },
+      { radius: 2.6, speed: -0.4, yOffset: -0.2, scale: 0.16, color: '#38bdf8', shape: 'oct', tilt: -0.5 },
+      { radius: 3.6, speed: 0.28, yOffset: 0.1, scale: 0.1, color: '#a78bfa', shape: 'box', tilt: 0.2 },
+    ],
+    []
+  )
 
   const refs = useRef(items.map(() => ({ group: null, mesh: null })))
 
@@ -124,12 +111,16 @@ function OrbitingElements({ mouseRef }) {
       {items.map((item, i) => (
         <group
           key={i}
-          ref={el => { if (refs.current[i]) refs.current[i].group = el }}
+          ref={(el) => {
+            if (refs.current[i]) refs.current[i].group = el
+          }}
           rotation={[item.tilt, 0, 0]}
         >
           {item.shape === 'box' ? (
             <Box
-              ref={el => { if (refs.current[i]) refs.current[i].mesh = el }}
+              ref={(el) => {
+                if (refs.current[i]) refs.current[i].mesh = el
+              }}
               args={[item.scale, item.scale, item.scale]}
             >
               <meshStandardMaterial
@@ -142,7 +133,9 @@ function OrbitingElements({ mouseRef }) {
             </Box>
           ) : (
             <Octahedron
-              ref={el => { if (refs.current[i]) refs.current[i].mesh = el }}
+              ref={(el) => {
+                if (refs.current[i]) refs.current[i].mesh = el
+              }}
               args={[item.scale]}
             >
               <meshStandardMaterial
@@ -161,7 +154,6 @@ function OrbitingElements({ mouseRef }) {
   )
 }
 
-/* ── Glowing torus rings ─────────────────────────────────── */
 function TorusRings({ mouseRef }) {
   const rings = [
     { radius: 2.2, tube: 0.008, speed: 0.3, color: '#4f8ef7', opacity: 0.5, tiltX: 0, tiltZ: 0 },
@@ -187,15 +179,12 @@ function TorusRings({ mouseRef }) {
       {rings.map((ring, i) => (
         <group key={i} rotation={[ring.tiltX, 0, ring.tiltZ]}>
           <Torus
-            ref={el => refs.current[i] = el}
+            ref={(el) => {
+              refs.current[i] = el
+            }}
             args={[ring.radius, ring.tube, 4, 256]}
           >
-            <meshBasicMaterial
-              color={ring.color}
-              transparent
-              opacity={ring.opacity}
-              side={THREE.DoubleSide}
-            />
+            <meshBasicMaterial color={ring.color} transparent opacity={ring.opacity} side={THREE.DoubleSide} />
           </Torus>
         </group>
       ))}
@@ -203,7 +192,6 @@ function TorusRings({ mouseRef }) {
   )
 }
 
-/* ── Particle field ──────────────────────────────────────── */
 function ParticleField() {
   const count = 200
   const positions = useMemo(() => {
@@ -212,7 +200,7 @@ function ParticleField() {
       const r = 5 + Math.random() * 8
       const theta = Math.random() * Math.PI * 2
       const phi = Math.acos(Math.random() * 2 - 1)
-      arr[i * 3]     = r * Math.sin(phi) * Math.cos(theta)
+      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta)
       arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta)
       arr[i * 3 + 2] = r * Math.cos(phi)
     }
@@ -234,7 +222,6 @@ function ParticleField() {
   )
 }
 
-/* ── Floating grid plane ─────────────────────────────────── */
 function GridPlane() {
   const ref = useRef()
   useFrame((s) => {
@@ -242,16 +229,9 @@ function GridPlane() {
       ref.current.position.y = -3.5 + Math.sin(s.clock.getElapsedTime() * 0.3) * 0.2
     }
   })
-  return (
-    <gridHelper
-      ref={ref}
-      args={[24, 24, '#1a3a6b', '#0f2040']}
-      position={[0, -3.5, 0]}
-    />
-  )
+  return <gridHelper ref={ref} args={[24, 24, '#1a3a6b', '#0f2040']} position={[0, -3.5, 0]} />
 }
 
-/* ── Main exported scene ─────────────────────────────────── */
 export default function HeroScene() {
   const mouseRef = useRef({ x: 0, y: 0 })
 
@@ -265,14 +245,12 @@ export default function HeroScene() {
       >
         <MouseTracker mouseRef={mouseRef} />
 
-        {/* Lighting */}
         <ambientLight intensity={0.15} />
         <directionalLight position={[6, 6, 4]} intensity={1.0} color="#4f8ef7" />
         <directionalLight position={[-6, -4, -4]} intensity={0.4} color="#8b5cf6" />
         <pointLight position={[0, 0, 3]} intensity={1.5} color="#00d4ff" distance={12} decay={2} />
         <pointLight position={[4, -2, -2]} intensity={0.6} color="#4f8ef7" distance={10} decay={2} />
 
-        {/* Scene objects */}
         <Stars radius={100} depth={50} count={2500} factor={2} fade saturation={0.3} speed={0.4} />
         <GridPlane />
         <HoloCore mouseRef={mouseRef} />

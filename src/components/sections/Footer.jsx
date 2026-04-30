@@ -11,29 +11,17 @@ export default function Footer() {
   }
 
   return (
-    <footer
-      className="relative overflow-hidden"
-      style={{ borderTop: '1px solid var(--border-subtle)' }}
-    >
-      {/* Top accent line */}
+    <footer className="relative overflow-hidden" style={{ borderTop: '1px solid var(--border-subtle)' }}>
       <div
         className="absolute top-0 left-0 right-0 h-px"
         style={{ background: 'linear-gradient(90deg, transparent, var(--border-accent), transparent)' }}
       />
 
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: 'var(--bg-secondary)', opacity: 0.5 }}
-      />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'var(--bg-secondary)', opacity: 0.5 }} />
 
       <div className="section-container py-14 relative z-10">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
-          {/* Brand */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <div className="flex items-center gap-2.5 mb-3">
               <div
                 className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-bold text-sm"
@@ -44,18 +32,17 @@ export default function Footer() {
                   backdropFilter: 'blur(8px)',
                 }}
               >
-                A
+                {personalInfo.name.charAt(0)}
               </div>
               <span className="font-display font-semibold text-sm" style={{ color: 'var(--text-secondary)' }}>
                 {personalInfo.name}
               </span>
             </div>
             <p className="text-xs max-w-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-              CS student building cool things on the internet.
+              {personalInfo.title}
             </p>
           </motion.div>
 
-          {/* Nav */}
           <motion.nav
             className="flex flex-wrap gap-x-6 gap-y-2"
             initial={{ opacity: 0 }}
@@ -63,21 +50,20 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
           >
-            {navLinks.map(link => (
+            {navLinks.map((link) => (
               <button
                 key={link}
                 onClick={() => scrollTo(link)}
                 className="text-xs transition-colors"
                 style={{ color: 'var(--text-muted)' }}
-                onMouseEnter={e => e.target.style.color = 'var(--section-num)'}
-                onMouseLeave={e => e.target.style.color = 'var(--text-muted)'}
+                onMouseEnter={(e) => (e.target.style.color = 'var(--section-num)')}
+                onMouseLeave={(e) => (e.target.style.color = 'var(--text-muted)')}
               >
                 {link}
               </button>
             ))}
           </motion.nav>
 
-          {/* Socials — no Twitter */}
           <motion.div
             className="flex items-center gap-2.5"
             initial={{ opacity: 0 }}
@@ -102,11 +88,11 @@ export default function Footer() {
                   border: '1px solid var(--border-subtle)',
                   color: 'var(--text-muted)',
                 }}
-                onMouseEnter={e => {
+                onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = accent || 'rgba(79,142,247,0.4)'
                   e.currentTarget.style.color = accent || 'var(--section-num)'
                 }}
-                onMouseLeave={e => {
+                onMouseLeave={(e) => {
                   e.currentTarget.style.borderColor = 'var(--border-subtle)'
                   e.currentTarget.style.color = 'var(--text-muted)'
                 }}
@@ -117,13 +103,12 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        {/* Bottom bar */}
         <div
           className="mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4"
           style={{ borderTop: '1px solid var(--border-subtle)' }}
         >
           <p className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
-            © {new Date().getFullYear()} {personalInfo.name} — Built with React, Three.js & Framer Motion
+            © {new Date().getFullYear()} {personalInfo.name} - Built with React, Three.js & Framer Motion
           </p>
 
           <motion.button

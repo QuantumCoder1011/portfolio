@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Briefcase } from 'lucide-react'
-import { experience } from '../../utils/data'
+import { ChevronDown } from 'lucide-react'
+import { education, experience } from '../../utils/data'
 
 function ExperienceCard({ job, index, isActive, onClick }) {
   return (
@@ -29,7 +29,6 @@ function ExperienceCard({ job, index, isActive, onClick }) {
         )}
 
         <div className="flex items-start gap-4 relative z-10">
-          {/* Logo */}
           <div
             className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center font-display font-bold text-base"
             style={{
@@ -47,7 +46,9 @@ function ExperienceCard({ job, index, isActive, onClick }) {
                 <h3 className="font-display font-bold text-base" style={{ color: 'var(--text-primary)' }}>
                   {job.role}
                 </h3>
-                <p className="text-sm font-medium mt-0.5" style={{ color: job.color }}>{job.company}</p>
+                <p className="text-sm font-medium mt-0.5" style={{ color: job.color }}>
+                  {job.company}
+                </p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <span
@@ -89,7 +90,9 @@ function ExperienceCard({ job, index, isActive, onClick }) {
                     className="flex items-start gap-2.5"
                   >
                     <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: job.color }} />
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{h}</p>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      {h}
+                    </p>
                   </motion.div>
                 ))}
               </div>
@@ -112,14 +115,13 @@ export default function Experience() {
       />
 
       <div className="section-container">
-        {/* Header */}
         <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="section-label">03 — Experience</span>
+          <span className="section-label">03 - Experience</span>
           <h2
             className="font-display font-bold leading-tight"
             style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', color: 'var(--text-primary)' }}
@@ -129,7 +131,6 @@ export default function Experience() {
         </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-10">
-          {/* Timeline */}
           <div className="lg:col-span-3 space-y-3">
             {experience.map((job, i) => (
               <ExperienceCard
@@ -141,7 +142,6 @@ export default function Experience() {
               />
             ))}
 
-            {/* Education */}
             <motion.div
               className="rounded-2xl p-5 mt-2"
               style={{
@@ -163,17 +163,16 @@ export default function Experience() {
                 </div>
                 <div>
                   <h4 className="font-display font-semibold text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    B.S. Computer Science
+                    {education.degree}
                   </h4>
                   <p className="text-xs mt-0.5" style={{ color: 'var(--section-num)' }}>
-                    UC Berkeley — Expected May 2025
+                    {education.school} - {education.period}
                   </p>
                 </div>
               </div>
             </motion.div>
           </div>
 
-          {/* Sidebar */}
           <div className="lg:col-span-2">
             <motion.div
               className="sticky top-28 space-y-4"
@@ -182,7 +181,6 @@ export default function Experience() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              {/* Current card */}
               <div
                 className="rounded-2xl p-5"
                 style={{
@@ -208,7 +206,6 @@ export default function Experience() {
                 </p>
               </div>
 
-              {/* Quick stats */}
               <div
                 className="rounded-2xl p-5"
                 style={{
@@ -226,17 +223,19 @@ export default function Experience() {
                 <div className="grid grid-cols-2 gap-3">
                   {[
                     { val: experience.length, label: 'Roles' },
-                    { val: '4', label: 'Features shipped' },
-                    { val: '22%', label: 'Perf. improved' },
-                    { val: '72%', label: 'Test coverage' },
-                  ].map(s => (
+                    { val: '3', label: 'Doctors tracked' },
+                    { val: 'Monthly', label: 'Reports' },
+                    { val: 'Excel + Tally', label: 'Tools used' },
+                  ].map((s) => (
                     <div
                       key={s.label}
                       className="rounded-xl p-3"
                       style={{ background: 'var(--border-subtle)', border: '1px solid var(--border-subtle)' }}
                     >
                       <div className="font-display font-bold text-lg gradient-text">{s.val}</div>
-                      <div className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{s.label}</div>
+                      <div className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                        {s.label}
+                      </div>
                     </div>
                   ))}
                 </div>

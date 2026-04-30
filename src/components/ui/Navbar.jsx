@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sun, Moon, Menu, X } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { personalInfo } from '../../utils/data'
 
 const navLinks = [
   { label: 'About', href: '#about' },
@@ -28,13 +29,13 @@ export default function Navbar({ theme, toggleTheme }) {
     if (isDetailPage) return
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) setActiveSection(entry.target.id)
         })
       },
       { rootMargin: '-35% 0px -35% 0px' }
     )
-    document.querySelectorAll('section[id]').forEach(s => observer.observe(s))
+    document.querySelectorAll('section[id]').forEach((s) => observer.observe(s))
     return () => observer.disconnect()
   }, [isDetailPage, location.pathname])
 
@@ -67,22 +68,20 @@ export default function Navbar({ theme, toggleTheme }) {
       >
         <div
           className="section-container flex items-center justify-between transition-all duration-400"
-          style={scrolled ? {
-            background: 'var(--glass-bg)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: '1rem',
-            padding: '0.6rem 1.25rem',
-          } : {}}
+          style={
+            scrolled
+              ? {
+                  background: 'var(--glass-bg)',
+                  backdropFilter: 'blur(24px)',
+                  WebkitBackdropFilter: 'blur(24px)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '1rem',
+                  padding: '0.6rem 1.25rem',
+                }
+              : {}
+          }
         >
-          {/* Logo */}
-          <motion.a
-            href="/"
-            onClick={goHome}
-            className="flex items-center gap-2.5 group"
-            whileHover={{ scale: 1.02 }}
-          >
+          <motion.a href="/" onClick={goHome} className="flex items-center gap-2.5 group" whileHover={{ scale: 1.02 }}>
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-bold text-base transition-all duration-300"
               style={{
@@ -92,17 +91,13 @@ export default function Navbar({ theme, toggleTheme }) {
                 backdropFilter: 'blur(8px)',
               }}
             >
-              A
+              {personalInfo.name.charAt(0)}
             </div>
-            <span
-              className="font-display font-semibold text-sm hidden sm:block tracking-wide"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Alex Chen
+            <span className="font-display font-semibold text-sm hidden sm:block tracking-wide" style={{ color: 'var(--text-secondary)' }}>
+              {personalInfo.name}
             </span>
           </motion.a>
 
-          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-0.5">
             {navLinks.map((link) => {
               const isActive = !isDetailPage && activeSection === link.href.slice(1)
@@ -127,7 +122,6 @@ export default function Navbar({ theme, toggleTheme }) {
             })}
           </nav>
 
-          {/* Controls */}
           <div className="flex items-center gap-2.5">
             <button
               onClick={toggleTheme}
@@ -177,7 +171,6 @@ export default function Navbar({ theme, toggleTheme }) {
         </div>
       </motion.header>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div

@@ -29,8 +29,12 @@ function ProgressBar({ label, level }) {
   return (
     <div ref={ref} className="space-y-2">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{label}</span>
-        <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>{level}%</span>
+        <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+          {label}
+        </span>
+        <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
+          {level}%
+        </span>
       </div>
       <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--border-subtle)' }}>
         <motion.div
@@ -41,8 +45,8 @@ function ProgressBar({ label, level }) {
           variants={{
             visible: {
               width: `${level}%`,
-              transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }
-            }
+              transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 },
+            },
           }}
         />
       </div>
@@ -63,7 +67,6 @@ export default function About() {
       />
 
       <div className="section-container">
-        {/* Section header */}
         <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: 24 }}
@@ -71,7 +74,7 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.65 }}
         >
-          <span className="section-label">01 — About</span>
+          <span className="section-label">01 - About</span>
           <h2
             className="font-display font-bold leading-tight"
             style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', color: 'var(--text-primary)' }}
@@ -81,14 +84,7 @@ export default function About() {
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Left — Bio */}
-          <motion.div
-            variants={slideInLeftVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {/* Profile card */}
+          <motion.div variants={slideInLeftVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <div
               className="rounded-2xl p-6 mb-7 relative overflow-hidden"
               style={{
@@ -103,7 +99,6 @@ export default function About() {
               />
 
               <div className="flex items-start gap-5 mb-5">
-                {/* Avatar */}
                 <div
                   className="w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center font-display font-bold text-2xl"
                   style={{
@@ -111,7 +106,7 @@ export default function About() {
                     color: '#030508',
                   }}
                 >
-                  A
+                  {personalInfo.name.charAt(0)}
                 </div>
                 <div>
                   <h3 className="font-display font-bold text-lg" style={{ color: 'var(--text-primary)' }}>
@@ -122,10 +117,12 @@ export default function About() {
                   </p>
                   <div className="flex flex-wrap gap-3 mt-2.5">
                     <span className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
-                      <MapPin size={11} />{personalInfo.location}
+                      <MapPin size={11} />
+                      {personalInfo.location}
                     </span>
                     <span className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-muted)' }}>
-                      <Mail size={11} />{personalInfo.email}
+                      <Mail size={11} />
+                      {personalInfo.email}
                     </span>
                   </div>
                 </div>
@@ -140,7 +137,6 @@ export default function About() {
               </div>
             </div>
 
-            {/* Bio paragraphs */}
             {personalInfo.bio.split('\n\n').map((para, i) => (
               <motion.p
                 key={i}
@@ -156,7 +152,10 @@ export default function About() {
             ))}
 
             <motion.a
-              href="#"
+              href={personalInfo.resumeUrl}
+              download
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
               style={{
                 background: 'var(--glass-bg)',
@@ -175,14 +174,7 @@ export default function About() {
             </motion.a>
           </motion.div>
 
-          {/* Right — Skills */}
-          <motion.div
-            variants={slideInRightVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {/* Progress bars */}
+          <motion.div variants={slideInRightVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <div
               className="rounded-2xl p-6 mb-6"
               style={{
@@ -195,20 +187,16 @@ export default function About() {
                 Core Skills
               </h3>
               <div className="space-y-4">
-                {proficiencies.map(p => (
+                {proficiencies.map((p) => (
                   <ProgressBar key={p.label} label={p.label} level={p.level} />
                 ))}
               </div>
             </div>
 
-            {/* Skill tag cloud */}
             <div className="space-y-5">
               {skills.map((group, gi) => (
                 <div key={group.category}>
-                  <p
-                    className="font-mono text-xs tracking-widest uppercase mb-2.5"
-                    style={{ color: 'var(--section-num)' }}
-                  >
+                  <p className="font-mono text-xs tracking-widest uppercase mb-2.5" style={{ color: 'var(--section-num)' }}>
                     {group.category}
                   </p>
                   <div className="flex flex-wrap gap-2">
